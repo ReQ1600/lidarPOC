@@ -67,5 +67,5 @@ int main()
 	getchar();//used for closing cuz getting events and doing a proper loop is an overkill for this thing
 	al_destroy_display(disp);
 	al_shutdown_primitives_addon();
-	return 0;
+	return 0; 
 }

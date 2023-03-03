@@ -5,45 +5,46 @@
 #include <allegro5/allegro_primitives.h>
 #include <vector>
 
+constexpr double DEG = 1.8;
+constexpr int NUMBER_OF_POINTS = 360 / DEG; //must be whole obviously
+constexpr double ANGLE_INCREASE_RAD = DEG * std::numbers::pi / 180;
+
 int main()
 {
-	const double DEG = 1.8;
-	const int NUMBER_OF_POINTS = 360 / DEG; //must be whole obviously
-	const double ANGLE_INCREASE_RAD = DEG * std::numbers::pi / 180;
-
 	float angleRad = 0;
 
-	std::vector<std::vector<float>> tabCos_sin(NUMBER_OF_POINTS, std::vector<float>(2, 0));
-	std::vector<std::vector<float>> tabRotated(NUMBER_OF_POINTS, std::vector<float>(2, 0));
+	double tabCos_sin[NUMBER_OF_POINTS][2];
+	double tabRotated[NUMBER_OF_POINTS][2];
+	double distances[NUMBER_OF_POINTS];
 
-	for (int i = 0; i < NUMBER_OF_POINTS; i++)//structured binding not going to work bc table must be created on runtime unlucky
+	for (auto& [cos, sin] : tabCos_sin)
 	{
-		tabCos_sin[i][0] = std::round(std::cos(angleRad) * 10000) / 10000;
-		tabCos_sin[i][1] = -std::round(std::sin(angleRad) * 10000) / 10000;
+		cos = std::round(std::cos(angleRad) * 10000) / 10000;
+		sin = -std::round(std::sin(angleRad) * 10000) / 10000;
 		angleRad += ANGLE_INCREASE_RAD;
 	}
 
-	angleRad = 0; //for checking
-	for (int i = 0; i < NUMBER_OF_POINTS; i++)
-	{
-		std::cout << "angles: " << angleRad << ": " << tabCos_sin[i][0] << ", " << tabCos_sin[i][1] << '\n';
-		angleRad += DEG;
-	}
+	//angleRad = 0; //for checking
+	//for (int i = 0; i < NUMBER_OF_POINTS; i++)
+	//{
+	//	std::cout << "angles: " << angleRad << ": " << tabCos_sin[i][0] << ", " << tabCos_sin[i][1] << '\n';
+	//	angleRad += DEG;
+	//}
 
 	//"simulating" an array of distance data. Normally it would be provided by a TOF sensor
 	srand(std::time(NULL));
-	std::unique_ptr<float[]> distance = std::make_unique<float[]>(NUMBER_OF_POINTS);//unque bc dont wanna make a loop for destroing (laziness rly)
-	for (int i = 0; i < NUMBER_OF_POINTS; i++)
+	
+	for (double& distance : distances)
 	{
-		distance[i] = rand() % 300 + 100;
-		//std::cout <<"dist: " << distance[i] << std::endl;
+		distance = rand() % 300 + (__int64)100;
+		//std::cout <<"dist: " << distance << std::endl;
 	}
 
 	//rotating and assigning points for displaying
 	for (int i = 0; i < NUMBER_OF_POINTS; i++)
 	{
-		tabRotated[i][0] = 640 + tabCos_sin[i][1] * distance[i];//x
-		tabRotated[i][1] = 450 + tabCos_sin[i][0] * distance[i];//y
+		tabRotated[i][0] = 640 + tabCos_sin[i][1] * distances[i];//x
+		tabRotated[i][1] = 450 + tabCos_sin[i][0] * distances[i];//y
 		std::cout << "tabrot: " << tabRotated[i][0] << ", " << tabRotated[i][1] << '\n';
 	}
 

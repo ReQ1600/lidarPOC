@@ -3,7 +3,6 @@
 #include <cstdio>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
-#include <vector>
 
 constexpr double DEG = 1.8;
 constexpr int NUMBER_OF_POINTS = 360 / DEG; //must be whole obviously
